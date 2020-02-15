@@ -68,35 +68,38 @@ void TimelineWriter::EnqueueWriteMarker(const std::string& name,
     ;
 }
 
+// TODO 
 void TimelineWriter::DoWriteEvent(const TimelineRecord& r) {
   assert(r.type == TimelineRecordType::EVENT);
 
   auto& tensor_idx = tensor_table_[r.tensor_name];
-  if (tensor_idx == 0) {
-    tensor_idx = (int)tensor_table_.size();
+  // 不需要
+  // if (tensor_idx == 0) {
+  //   tensor_idx = (int)tensor_table_.size();
 
-    // We model tensors as processes. Register metadata for this "pid".
-    file_ << "{";
-    file_ << "\"name\": \"process_name\"";
-    file_ << ", \"ph\": \"M\"";
-    file_ << ", \"pid\": " << tensor_idx << "";
-    file_ << ", \"args\": {\"name\": \"" << r.tensor_name << "\"}";
-    file_ << "}," << std::endl;
-    file_ << "{";
-    file_ << "\"name\": \"process_sort_index\"";
-    file_ << ", \"ph\": \"M\"";
-    file_ << ", \"pid\": " << tensor_idx << "";
-    file_ << ", \"args\": {\"sort_index\": " << tensor_idx << "}";
-    file_ << "}," << std::endl;
-  }
+  //   // We model tensors as processes. Register metadata for this "pid".
+  //   file_ << "{";
+  //   file_ << "\"name\": \"process_name\"";
+  //   file_ << ", \"ph\": \"M\"";
+  //   file_ << ", \"pid\": " << tensor_idx << "";
+  //   file_ << ", \"args\": {\"name\": \"" << r.tensor_name << "\"}";
+  //   file_ << "}," << std::endl;
+  //   file_ << "{";
+  //   file_ << "\"name\": \"process_sort_index\"";
+  //   file_ << ", \"ph\": \"M\"";
+  //   file_ << ", \"pid\": " << tensor_idx << "";
+  //   file_ << ", \"args\": {\"sort_index\": " << tensor_idx << "}";
+  //   file_ << "}," << std::endl;
+  // }
 
   file_ << "{";
   file_ << "\"ph\": \"" << r.phase << "\"";
-  if (r.phase != 'E') {
+  // if (r.phase != 'E') {
     // Not necessary for ending event.
     file_ << ", \"name\": \"" << r.op_name << "\"";
-  }
+  // }
   file_ << ", \"ts\": " << r.ts_micros << "";
+  file_ << ", \"tensor name\": " << r.tensor_name << ""; // TODO 
   file_ << ", \"pid\": " << tensor_idx << "";
   if (r.phase == 'X') {
     file_ << ", \"dur\": " << 0 << "";
